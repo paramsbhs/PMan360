@@ -26,7 +26,7 @@ void func_BG(char **cmd){
 		printf("fork() operation failed\n");
 		return;
 	}else if(pid == 0){ //if  the pid is equal to 0, the current process is the child process
-		execvp(cmd, cmd[0]);
+		execvp(cmd[0], cmd);
 		printf("execvp Failed: No such file or directory\n");
 		exit(1);
 	}else{ //if the pid is bigger than 0, the current process is the parent process
@@ -96,7 +96,7 @@ void func_BGstop(char * str_pid){
  */
 void func_BGstart(char * str_pid){
 	pid_t pid = atoi(str_pid);
-	retVal = kill(pid,SIGCONT);
+	int retVal = kill(pid,SIGCONT);
 	if(retVal == -1){
 		printf("Error Starting Process");
 	}else if(retVal == 0){
