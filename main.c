@@ -26,7 +26,7 @@ void func_BG(char **cmd){
 		printf("fork() operation failed\n");
 		return;
 	}else if(pid == 0){ //if  the pid is equal to 0, the current process is the child process
-		execvp(cmd[0], cmd);
+		execvp(cmd, cmd[0]);
 		printf("execvp Failed: No such file or directory\n");
 		exit(1);
 	}else{ //if the pid is bigger than 0, the current process is the parent process
@@ -50,6 +50,7 @@ void func_BGlist(char **cmd){
 }
 
 /*
+ * Referring to Tutorial 2,
  * Given the pid in string form,
  * we need to convert this to integer
  * form and use the kill() function
@@ -62,23 +63,45 @@ void func_BGlist(char **cmd){
  */
 void func_BGkill(char * str_pid){
 	pid_t pid = atoi(str_pid);
-	int value = kill(pid, SIGTERM);
-	if(value == -1){
+	int retVal = kill(pid, SIGTERM);
+	if(retVal == -1){
 		printf("Error Killing Process\n");
-	}else{
+	}else if(retVal == 0){
 		head = deleteNode(head,pid);
 		printf("Killed Process %d\n", pid);	
 	}
 }
 
-
+/* 
+ * Referring to Tutorial 2,
+ * Similar to BGkill but instead we
+ * are using SIGSTOP for kill(pid,SIGSTOP)
+ * and if it equals -1 then there is a
+ * error stopping the process.
+ */
 void func_BGstop(char * str_pid){
-	//Your code here
+	pid_t pid = atoi(str_pid);
+	int retVal = kill(pid,SIGSTOP);
+	if(retVal == -1){
+		printf("Error Stopping Process\n");
+	}else if(retVal == 0){
+		printf("Stopped Process %d\n", pid);
+	}
 }
 
-
+/*
+ * Referring to Tutorial 2,
+ * Similar to BGkill and BGstop, but
+ * instead we are using SIGCONT
+ */
 void func_BGstart(char * str_pid){
-	//Your code here
+	pid_t pid = atoi(str_pid);
+	retVal = kill(pid,SIGCONT);
+	if(retVal == -1){
+		printf("Error Starting Process");
+	}else if(retVal == 0){
+		printf("Started Process %d\n", pid);
+	}
 }
 
 
