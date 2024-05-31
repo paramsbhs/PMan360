@@ -138,6 +138,26 @@ void func_pstat(char * str_pid){
 	fclose(file);
 }
 
+/*
+* According to Q&A Q6, we need to implement
+* the following, so it indicates if a process
+* is terminated outside of PMan. It uses waitpid
+* and NOHANG to check if the process is terminated.
+*/
+void processTerminated() {
+    int retVal;
+    pid_t pid;
+    while ((pid = waitpid(-1, &retVal, WNOHANG)) > 0) {
+        if (WIFEXITED(retVal)) {
+            head = deleteNode(head, pid);
+            printf("Terminated Process %d with exit status %d\n", pid, WEXITSTATUS(retVal));
+        } else if (WIFSIGNALED(retVal)) {
+            head = deleteNode(head, pid);
+            printf("Terminated Process %d by signal %d\n", pid, WTERMSIG(retVal));
+        }
+    }
+}
+
  
 int main(){
     char user_input_str[50];
@@ -174,7 +194,7 @@ int main(){
         printf("Bye Bye \n");
         exit(0);
       } else {
-        printf("Process %s does not exist\n", lst[0]);
+        printf("Invalid input\n");
       }
     }
 
