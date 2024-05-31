@@ -26,7 +26,7 @@ void func_BG(char **cmd){
 		printf("fork() operation failed\n");
 		return;
 	}else if(pid == 0){ //if  the pid is equal to 0, the current process is the child process
-		execvp(cmd[1], &cmd);
+		execvp(cmd[1], cmd);
 		printf("execvp Failed: No such file or directory\n");
 		exit(1);
 	}else{ //if the pid is bigger than 0, the current process is the parent process
@@ -63,6 +63,10 @@ void func_BGlist(char **cmd){
  */
 void func_BGkill(char * str_pid){
 	pid_t pid = atoi(str_pid);
+	if(pid == 0){ //atoi error handling
+		printf("PID INVALID\n");
+		return;
+	}
 	int retVal = kill(pid, SIGTERM);
 	if(retVal == -1){
 		printf("Error Killing Process\n");
@@ -81,6 +85,10 @@ void func_BGkill(char * str_pid){
  */
 void func_BGstop(char * str_pid){
 	pid_t pid = atoi(str_pid);
+	if(pid == 0){ //atoi error handling
+		printf("PID INVALID\n");
+		return;
+	}
 	int retVal = kill(pid,SIGSTOP);
 	if(retVal == -1){
 		printf("Error Stopping Process\n");
@@ -96,6 +104,10 @@ void func_BGstop(char * str_pid){
  */
 void func_BGstart(char * str_pid){
 	pid_t pid = atoi(str_pid);
+	if(pid == 0){ //atoi error handling
+		printf("PID INVALID\n");
+		return;
+	}
 	int retVal = kill(pid,SIGCONT);
 	if(retVal == -1){
 		printf("Error Starting Process");
@@ -106,7 +118,24 @@ void func_BGstart(char * str_pid){
 
 
 void func_pstat(char * str_pid){
-	//Your code here
+	char path[50];
+	sprintf(path, "/proc/%s/status", str_pid);
+	FILE *file = fopen(path, "r");
+	if(file == NULL){
+		printf("Process %s does not exist\n", str_pid);
+		return;
+	}
+	char line[256];
+	while(fgets(line, sizeof(line), file)){
+		if(strstr(line, "State:") != NULL){
+			printf("%s", line);
+		}else if(strstr(line, "VmSize:") != NULL){
+			printf("%s", line);
+		}else if(strstr(line, "Threads:") != NULL){
+			printf("%s", line);
+		}
+	}
+	fclose(file);
 }
 
  
