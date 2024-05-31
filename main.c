@@ -30,7 +30,7 @@ void func_BG(char **cmd){
 		printf("execvp Failed: No such file or directory\n");
 		exit(1);
 	}else{ //if the pid is bigger than 0, the current process is the parent process
-		head = add_newNode(head, pid, cmd[0]); //use the createNode function made in the linked_list program
+		head = add_newNode(head, pid, cmd[1]); //use the createNode function made in the linked_list program
 		printf("PID %d started\n", pid); //print the pid number
 	}
 }
@@ -149,11 +149,11 @@ void processTerminated() {
     pid_t pid;
     while ((pid = waitpid(-1, &retVal, WNOHANG)) > 0) {
         if (WIFEXITED(retVal)) {
-            head = deleteNode(head, pid);
             printf("Terminated Process %d with exit status %d\n", pid, WEXITSTATUS(retVal));
+			head = deleteNode(head, pid);
         } else if (WIFSIGNALED(retVal)) {
-            head = deleteNode(head, pid);
             printf("Terminated Process %d by signal %d\n", pid, WTERMSIG(retVal));
+			head = deleteNode(head, pid);
         }
     }
 }
