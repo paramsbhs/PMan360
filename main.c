@@ -27,8 +27,10 @@ void func_BG(char **cmd){
 		return;
 	}else if(pid == 0){ //if  the pid is equal to 0, the current process is the child process
 		execvp(cmd[1], &cmd[1]);
-		printf("execvp Failed: No such file or directory\n");
-		exit(1);
+		if (execvp(cmd[1], &cmd[1]) < 0) {
+			printf("Error: execution of %s failed \n", input[0]);
+			exit(-1);
+		}
 	}else{ //if the pid is bigger than 0, the current process is the parent process
 		head = add_newNode(head, pid, cmd[1]); //use the createNode function made in the linked_list program
 		printf("PID %d started\n", pid); //print the pid number

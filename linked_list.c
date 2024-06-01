@@ -48,6 +48,7 @@ Node * deleteNode(Node* head, pid_t pid){
 		if(currentNode->next->pid == pid){ //if the next nodes pid is matching, delete it
 			Node* temporaryNode = currentNode->next; //store reference for the next node
 			currentNode->next = currentNode->next->next; //set the next node to the node after
+			free(temporaryNode); //free temp
 			return head;
 		}
 		currentNode = currentNode->next; //Iterate through the list
