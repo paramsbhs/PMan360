@@ -26,6 +26,7 @@ void func_BG(char **cmd){
 		printf("fork() operation failed\n");
 		return;
 	}else if(pid == 0){ //if  the pid is equal to 0, the current process is the child process
+		execvp(cmd[1], &cmd[1]);
 		if(execvp(cmd[1], &cmd[1]) < 0){
 			printf("Error, %s failed to execute\n", cmd[1]);
 			exit(-1);
