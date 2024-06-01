@@ -127,6 +127,32 @@ void func_BGstart(char * str_pid){
 }
 
 /*
+* A Helper function for func_pstat as it
+* is repeated to find the Uptime and stime
+*/
+void funcTime(char * str_pid){
+	char path[256]; //create a path so we can format str_pid into a /proc/pid/status
+	strcpy(path, "/proc/");
+	strcat(path, str_pid);
+	strcat(path, "/stat");
+	FILE *stringPath = fopen(path, "r"); //open the path file
+	if(stringPath == NULL){ //error handling if the path is empty
+		printf("Process %s does not exist\n", str_pid);
+		return;
+	}
+	char line[256]; //create a line to read the file line by line
+	while(fgets(line, sizeof(line), stringPath)){ //read the file line by line
+		if(strstr(line, "Uptime:") != NULL){ //Use substring search to find the Utime
+			printf("%s", line);
+		}else if(strstr(line, "stime:") != NULL){ //Use substring search to find the stime
+			printf("%s", line);
+		}
+	}
+	fclose(stringPath);
+}
+
+
+/*
 * According to the Assignment specifications,
 * we need to implement the pstat function to
 * print the following information about a process:
@@ -155,37 +181,13 @@ void func_pstat(char * str_pid){
 		}else if(strstr(line, "State:") != NULL){ //Use substring search to find the VmSize
 			printf("%s", line);
 		}else{
-			funcTime();
-		}else if(strstr(line, "RssAnon:") != NULL){ //Use substring search to find the rss
+			funcTime(str_pid);
+		}
+		if(strstr(line, "RssAnon:") != NULL){ //Use substring search to find the rss
 			printf("%s", line);
 		}else if(strstr(line, "voluntary_ctxt_switches:") != NULL){ //Use substring search to find the voluntary ctxt
 			printf("%s", line);
 		}else if(strstr(line, "nonvoluntary_ctxt_switches:") != NULL){ //Use substring search to find the nonvoluntary ctxt
-			printf("%s", line);
-		}
-	}
-	fclose(stringPath);
-}
-
-/*
-* A Helper function for func_pstat as it
-* is repeated to find the Uptime and stime
-*/
-void funcTime(){
-	char path[256]; //create a path so we can format str_pid into a /proc/pid/status
-	strcpy(path, "/proc/");
-	strcat(path, str_pid);
-	strcat(path, "/stat");
-	FILE *stringPath = fopen(path, "r"); //open the path file
-	if(stringPath == NULL){ //error handling if the path is empty
-		printf("Process %s does not exist\n", str_pid);
-		return;
-	}
-	char line[256]; //create a line to read the file line by line
-	while(fgets(line, sizeof(line), stringPath)){ //read the file line by line
-		if(strstr(line, "Uptime:") != NULL){ //Use substring search to find the Utime
-			printf("%s", line);
-		}else if(strstr(line, "stime:") != NULL){ //Use substring search to find the stime
 			printf("%s", line);
 		}
 	}
