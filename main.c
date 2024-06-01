@@ -27,10 +27,8 @@ void func_BG(char **cmd){
 		return;
 	}else if(pid == 0){ //if  the pid is equal to 0, the current process is the child process
 		execvp(cmd[1], &cmd[1]);
-		if (execvp(cmd[1], &cmd[1]) < 0) { //From Q&A, if execvp returns -1, it failed
 			printf("Error, %s failed to execute\n", cmd[1]);
 			exit(-1);
-		}
 	}else{ //if the pid is bigger than 0, the current process is the parent process
 		int status = 0; 
 		pid_t pid2 = waitpid(pid, &status, WNOHANG);
