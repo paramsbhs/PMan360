@@ -11,7 +11,6 @@
 #include "linked_list.h"
 
 Node* head = NULL;
-void processTerminated();
 
 /* 
  * According to Tutorial 2, for fork(),
@@ -27,10 +26,10 @@ void func_BG(char **cmd){
 		printf("fork() operation failed\n");
 		return;
 	}else if(pid == 0){ //if  the pid is equal to 0, the current process is the child process
-		execvp(cmd[1], &cmd[1]);
+		if(execvp(cmd[1], &cmd[1]) < 0){
 			printf("Error, %s failed to execute\n", cmd[1]);
 			exit(-1);
-			processTerminated();
+		}
 	}else{ //if the pid is bigger than 0, the current process is the parent process
 		int status = 0; 
 		pid_t pid2 = waitpid(pid, &status, WNOHANG);
