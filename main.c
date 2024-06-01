@@ -11,6 +11,7 @@
 #include "linked_list.h"
 
 Node* head = NULL;
+void processTerminated();
 
 /* 
  * According to Tutorial 2, for fork(),
