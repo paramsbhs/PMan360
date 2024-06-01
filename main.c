@@ -31,7 +31,7 @@ void func_BG(char **cmd){
 			printf("Error, %s failed to execute\n", cmd[1]);
 			exit(-1);
 		}
-	}else{ //if the pid is bigger than 0, the current process is the parent process
+	}else if(pid > 0){ //if the pid is bigger than 0, the current process is the parent process
 		int status = 0; 
 		pid_t pid2 = waitpid(pid, &status, WNOHANG);
 		if(pid2 == 0){ //Child process is running so we can add it to the linked list		
@@ -41,6 +41,7 @@ void func_BG(char **cmd){
 			if(WIFEXITED(status) || WIFSIGNALED(status)){ //check the status of the child process
 				printf("Child process %d terminated\n", pid); //print the terminated child process
 				head = deleteNode(head,pid); //delete the terminated child process from the linked list
+				return;
 			}
 		}
 	}
