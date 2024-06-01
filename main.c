@@ -21,6 +21,10 @@ Node* head = NULL;
  * and the current process is the parent process.
  */
 void func_BG(char **cmd){
+	if(system(cmd[1]) != 0){
+        printf("Error, %s failed to execute\n", cmd[1]);
+        return;
+    }
 	pid_t pid = fork();
 	if(pid < 0){ //if the pid is less than 0, fork failed
 		printf("fork() operation failed\n");
