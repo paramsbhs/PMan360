@@ -29,6 +29,7 @@ void func_BG(char **cmd){
 		execvp(cmd[1], &cmd[1]);
 			printf("Error, %s failed to execute\n", cmd[1]);
 			exit(-1);
+			processTerminated();
 	}else{ //if the pid is bigger than 0, the current process is the parent process
 		int status = 0; 
 		pid_t pid2 = waitpid(pid, &status, WNOHANG);
@@ -36,9 +37,9 @@ void func_BG(char **cmd){
 			head = add_newNode(head, pid, cmd[1]); //use the createNode function made in the linked_list program
 			printf("PID %d started\n", pid); //print the pid number
 		}else if (pid2 == pid){ //Child process is terminated so check the status
-			if(WIFEXITED(status) || WIFSIGNALED(status)){
-				printf("Child process %d terminated\n", pid);
-				head = deleteNode(head,pid);
+			if(WIFEXITED(status) || WIFSIGNALED(status)){ //check the status of the child process
+				printf("Child process %d terminated\n", pid); //print the terminated child process
+				head = deleteNode(head,pid); //delete the terminated child process from the linked list
 			}
 		}
 	}
@@ -51,10 +52,10 @@ void func_BG(char **cmd){
  * the PID and the Path
  */
 void func_BGlist(char **cmd){
-	if(head == NULL){
-		printf("No Processes Running\n");
+	if(head == NULL){ //check if list is empty
+		printf("No Processes Running\n"); 
 	}else{
-		printList(head);
+		printList(head); //otherwise print the entire list
 	}
 }
 
@@ -76,11 +77,11 @@ void func_BGkill(char * str_pid){
 		printf("PID INVALID\n");
 		return;
 	}
-	int retVal = kill(pid, SIGTERM);
-	if(retVal == -1){
+	int retVal = kill(pid, SIGTERM); //get the return value
+	if(retVal == -1){ //if it is -1, there was an error killing the process
 		printf("Error Killing Process\n");
-	}else if(retVal == 0){
-		head = deleteNode(head,pid);
+	}else if(retVal == 0){ //if it is 0, the process was killed successfully
+		head = deleteNode(head,pid); //remove the node
 		printf("Killed Process %d\n", pid);	
 	}
 }
@@ -98,10 +99,10 @@ void func_BGstop(char * str_pid){
 		printf("PID INVALID\n");
 		return;
 	}
-	int retVal = kill(pid,SIGSTOP);
-	if(retVal == -1){
+	int retVal = kill(pid,SIGSTOP); //get the return value
+	if(retVal == -1){ //if it is -1, there was an error killing the process
 		printf("Error Stopping Process\n");
-	}else if(retVal == 0){
+	}else if(retVal == 0){ //if it is 0, the process was killed successfully
 		printf("Stopped Process %d\n", pid);
 	}
 }
@@ -117,10 +118,10 @@ void func_BGstart(char * str_pid){
 		printf("PID INVALID\n");
 		return;
 	}
-	int retVal = kill(pid,SIGCONT);
-	if(retVal == -1){
+	int retVal = kill(pid,SIGCONT); //get the return value
+	if(retVal == -1){ //if it is -1, there was an error killing the process
 		printf("Error Starting Process");
-	}else if(retVal == 0){
+	}else if(retVal == 0){ //if it is 0, the process was killed successfully
 		printf("Started Process %d\n", pid);
 	}
 }
@@ -151,7 +152,7 @@ void funcTime(char * str_pid){
 				printf("Stime: %s\n", token);
 				return;
 			}
-			token = strtok(NULL, " ");
+			token = strtok(NULL, " "); //traverse through the line
 		}
 	}
 	fclose(stringPath);
@@ -212,13 +213,13 @@ void func_pstat(char * str_pid){
 void processTerminated() {
     int retVal;
     pid_t pid;
-    while ((pid = waitpid(-1, &retVal, WNOHANG)) > 0) {
-        if (WIFEXITED(retVal)) {
-            printf("Terminated Process %d with exit status %d\n", pid, WEXITSTATUS(retVal));
-			head = deleteNode(head, pid);
-        } else if (WIFSIGNALED(retVal)) {
+    while ((pid = waitpid(-1, &retVal, WNOHANG)) > 0) { //check if the process is terminated
+        if (WIFEXITED(retVal)) { //check if the process is exited
+            printf("Terminated Process %d with exit status %d\n", pid, WEXITSTATUS(retVal)); 
+			head = deleteNode(head, pid); //remove the node
+        } else if (WIFSIGNALED(retVal)) { //check if the process is signaled
             printf("Terminated Process %d by signal %d\n", pid, WTERMSIG(retVal));
-			head = deleteNode(head, pid);
+			head = deleteNode(head, pid); //remove the node
         }
     }
 }

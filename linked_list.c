@@ -39,7 +39,8 @@ Node * deleteNode(Node* head, pid_t pid){
 
 	if(head->pid == pid){ //If the head is matching the pid number,
 		Node* temporaryNode = head; //Delete the head
-		head = temporaryNode->next;
+		head = temporaryNode->next; //Set the head to the next node
+		free(temporaryNode); //free the temporary node created as it is not required anymore
 		return head; //return the node deleted
 	}
 
@@ -48,7 +49,7 @@ Node * deleteNode(Node* head, pid_t pid){
 		if(currentNode->next->pid == pid){ //if the next nodes pid is matching, delete it
 			Node* temporaryNode = currentNode->next; //store reference for the next node
 			currentNode->next = currentNode->next->next; //set the next node to the node after
-			free(temporaryNode); //free temp
+			free(temporaryNode); //free temporary node as it is not required anymore
 			return head;
 		}
 		currentNode = currentNode->next; //Iterate through the list
@@ -58,9 +59,9 @@ Node * deleteNode(Node* head, pid_t pid){
 }
 
 void printList(Node *node){
-	while(node != NULL){
-		printf("PID %d, Path %s\n", node->pid, node->path);
-		node = node->next;
+	while(node != NULL){ //loop through the linked list
+		printf("PID %d, Path %s\n", node->pid, node->path); //print the pid and path of the current node
+		node = node->next; //traverse through the list
 	}
 }
 
