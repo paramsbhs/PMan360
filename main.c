@@ -151,6 +151,7 @@ void funcTime(char * str_pid){
 				return;
 			}
 			token = strtok(NULL, " ");
+		}
 	}
 	fclose(stringPath);
 }
