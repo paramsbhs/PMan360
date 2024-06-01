@@ -27,13 +27,21 @@ void func_BG(char **cmd){
 		return;
 	}else if(pid == 0){ //if  the pid is equal to 0, the current process is the child process
 		execvp(cmd[1], &cmd[1]);
-		if (execvp(cmd[1], &cmd[1]) < 0) {
+		if (execvp(cmd[1], &cmd[1]) < 0) { //From Q&A, if execvp returns -1, it failed
 			printf("Error, %s failed to execute\n", cmd[1]);
 			exit(-1);
 		}
 	}else{ //if the pid is bigger than 0, the current process is the parent process
-		head = add_newNode(head, pid, cmd[1]); //use the createNode function made in the linked_list program
-		printf("PID %d started\n", pid); //print the pid number
+		int status = 0; 
+		pid_t pid2 = waitpid(pid, &status, WNOHANG);
+		if(pid2 == 0){ //Child process is running so we can add it to the linked list		
+			head = add_newNode(head, pid, cmd[1]); //use the createNode function made in the linked_list program
+			printf("PID %d started\n", pid); //print the pid number
+		}else if (pid2 == pid){ //Child process is terminated so check the status
+			if(WIFEXITED(status) || WIFSIGNALED(status)){
+				printf("Child process %d terminated\n", pid);
+			}
+		}
 	}
 }
 
