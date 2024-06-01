@@ -38,6 +38,7 @@ void func_BG(char **cmd){
 		}else if (pid2 == pid){ //Child process is terminated so check the status
 			if(WIFEXITED(status) || WIFSIGNALED(status)){
 				printf("Child process %d terminated\n", pid);
+				head = deleteNode(head,pid);
 			}
 		}
 	}
