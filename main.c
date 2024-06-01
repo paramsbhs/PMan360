@@ -186,7 +186,13 @@ void func_pstat(char * str_pid){
 			printf("%s", line);
 		}else if(strstr(line, "State:") != NULL){ //Use substring search to find the VmSize
 			printf("%s", line);
-		}else if(strstr(line, "RssAnon:") != NULL){ //Use substring search to find the rss
+		}
+	}
+	fclose(stringPath); //close the path file so we can print time
+	funcTime(str_pid);
+	stringPath = fopen(path, "r"); //open the path file again
+	while(fgets(line, sizeof(line), stringPath)){
+	 	if(strstr(line, "RssAnon:") != NULL){ //Use substring search to find the rss
 			printf("%s", line);
 		}else if(strstr(line, "voluntary_ctxt_switches:") != NULL){ //Use substring search to find the voluntary ctxt
 			printf("%s", line);
@@ -194,7 +200,6 @@ void func_pstat(char * str_pid){
 			printf("%s", line);
 		}
 	}
-	funcTime(str_pid);
 	fclose(stringPath);
 }
 
