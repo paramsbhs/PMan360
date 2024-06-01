@@ -126,26 +126,47 @@ void func_BGstart(char * str_pid){
 	}
 }
 
-
+/*
+* According to the Assignment specifications,
+* we need to implement the pstat function to
+* print the following information about a process:
+* 1. The command that started the process
+* 2. The state of the process
+* 3. The amount of time the process has been scheduled in user mode
+* 4. The amount of time the process has been scheduled in kernel mode
+* 5. The amount of memory the process is using
+* 6. The number of voluntary context switches the process has made
+* 7. The number of involuntary context switches the process has been involved in
+*/
 void func_pstat(char * str_pid){
-	char path[50];
-	sprintf(path, "/proc/%s/status", str_pid);
-	FILE *file = fopen(path, "r");
-	if(file == NULL){
+	char path[256]; //create a path so we can format str_pid into a /proc/pid/status
+	strcpy(path, "/proc/");
+	strcat(path, str_pid);
+	strcat(path, "/status");
+	FILE *stringPath = fopen(path, "r"); //open the path file
+	if(stringPath == NULL){ //error handling if the path is empty
 		printf("Process %s does not exist\n", str_pid);
 		return;
 	}
-	char line[256];
-	while(fgets(line, sizeof(line), file)){
-		if(strstr(line, "State:") != NULL){
+	char line[256]; //create a line to read the file line by line
+	while(fgets(line, sizeof(line), stringPath)){ //read the file line by line
+		if(strstr(line, "Name:") != NULL){ //Use substring search to find the Comm
 			printf("%s", line);
-		}else if(strstr(line, "VmSize:") != NULL){
+		}else if(strstr(line, "State:") != NULL){ //Use substring search to find the VmSize
 			printf("%s", line);
-		}else if(strstr(line, "Threads:") != NULL){
+		}else if(strstr(line, "Uptime:") != NULL){ //Use substring search to find the Utime
+			printf("%s", line);
+		}else if(strstr(line, "stime:") != NULL){ //Use substring search to find the stime
+			printf("%s", line);
+		}else if(strstr(line, "RssAnon:") != NULL){ //Use substring search to find the rss
+			printf("%s", line);
+		}else if(strstr(line, "voluntary_ctxt_switches:") != NULL){ //Use substring search to find the voluntary ctxt
+			printf("%s", line);
+		}else if(strstr(line, "nonvoluntary_ctxt_switches:") != NULL){ //Use substring search to find the nonvoluntary ctxt
 			printf("%s", line);
 		}
 	}
-	fclose(file);
+	fclose(stringPath);
 }
 
 /*
