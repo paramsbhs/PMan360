@@ -139,7 +139,7 @@ void funcTime(char * str_pid){
 		return;
 	}
 	char line[512]; //create a line to read the file line by line
-	while(fgets(line, sizeof(line), stringPath)){ //read the file line by line
+	if(fgets(line, sizeof(line), stringPath)){ //read the file line by line
 		char* token = strtok(line, " "); //use strtok to split the line by spaces
 		int count = 0;
 		while(token != NULL){ //iterate through the line
