@@ -33,6 +33,7 @@ void func_BG(char **cmd){
 			return;
 		}
 	}else if(pid > 0){ //if the pid is bigger than 0, the current process is the parent process
+		usleep(1000); //delay so waitpid can check the status of the child process
 		int status = 0; 
 		pid_t pid2 = waitpid(pid, &status, WNOHANG);
 		if(pid2 == 0){ //Child process is running so we can add it to the linked list		
