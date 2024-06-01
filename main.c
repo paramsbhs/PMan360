@@ -138,13 +138,19 @@ void funcTime(char * str_pid){
 		printf("Process %s does not exist\n", str_pid);
 		return;
 	}
-	char line[256]; //create a line to read the file line by line
+	char line[512]; //create a line to read the file line by line
 	while(fgets(line, sizeof(line), stringPath)){ //read the file line by line
-		if(strstr(line, "Uptime:") != NULL){ //Use substring search to find the Utime
-			printf("%s", line);
-		}else if(strstr(line, "stime:") != NULL){ //Use substring search to find the stime
-			printf("%s", line);
-		}
+		char* token = strtok(line, " "); //use strtok to split the line by spaces
+		int count = 0;
+		while(token != NULL){ //iterate through the line
+			count++;
+			if(count == 14){ //The 14th token is utime
+				printf("Utime: %s\n", token);
+			}else if(count == 15){ //The 15th token is stime
+				printf("Stime: %s\n", token);
+				return;
+			}
+			token = strtok(NULL, " ");
 	}
 	fclose(stringPath);
 }
@@ -172,7 +178,7 @@ void func_pstat(char * str_pid){
 		printf("Process %s does not exist\n", str_pid);
 		return;
 	}
-	char line[256]; //create a line to read the file line by line
+	char line[512]; //create a line to read the file line by line
 	while(fgets(line, sizeof(line), stringPath)){ //read the file line by line
 		if(strstr(line, "Name:") != NULL){ //Use substring search to find the Comm
 			printf("%s", line);
