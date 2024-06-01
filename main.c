@@ -30,6 +30,7 @@ void func_BG(char **cmd){
 		if(execvp(cmd[1], &cmd[1]) < 0){
 			printf("Error, %s failed to execute\n", cmd[1]);
 			exit(-1);
+			return;
 		}
 	}else if(pid > 0){ //if the pid is bigger than 0, the current process is the parent process
 		int status = 0; 
@@ -41,7 +42,6 @@ void func_BG(char **cmd){
 			if(WIFEXITED(status) || WIFSIGNALED(status)){ //check the status of the child process
 				printf("Child process %d terminated\n", pid); //print the terminated child process
 				head = deleteNode(head,pid); //delete the terminated child process from the linked list
-				return;
 			}
 		}
 	}
